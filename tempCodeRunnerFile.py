@@ -1,0 +1,1 @@
+= np.array([20, 25, 20], dtype=float)
