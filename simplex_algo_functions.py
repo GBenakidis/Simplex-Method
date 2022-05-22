@@ -67,6 +67,14 @@ def rowDivider(fi, divider, row):
     fi[row] = fi[row]/divider
     return fi
 
+def multiSubRow(fi, multier, new_row, starting_row):
+    fi[new_row]=fi[new_row]-(multier*fi[starting_row])
+    return fi
+
+
+def multiSumRow(fi, multier, new_row, starting_row):
+    fi[new_row] = fi[new_row]+(multier*fi[starting_row])
+    return fi
 
 def nextRow(row):
     if(row == 0):
@@ -84,7 +92,6 @@ def simplex_algo(fi, zj_ci, P):
     pivotNum = pivotInfo[0]
     pivotRow = int(pivotInfo[1])
     pivotCol = int(pivotInfo[2])
-    print('PNUM: ' + str(pivotNum) + '<- PROW: ' + str(pivotRow) + ' PCOL: ' + str(pivotCol))
 
     # TODO-CALCS 1
     # From 'flow_chart_with_identity_array' array, to pivot's row, divide with pivot all the row
@@ -92,6 +99,7 @@ def simplex_algo(fi, zj_ci, P):
     pv = pivot_vector_creator(pivotNum, len(fi[0]))
     fi = rowDivider(fi, pv, pivotRow)
     print(fi)
+    print(zj_ci)
 
     # TODO-CALCS 2
     # From 'flow_chart_with_identity_array' array, to the other row, multi with pivot's under number the 'pivot's row'
@@ -100,7 +108,12 @@ def simplex_algo(fi, zj_ci, P):
     op = otherPivot(fi, nr, pivotCol)
     opv = pivot_vector_creator(op, len(fi[0]))
     print('The next row we will divide is: ' + str(nr))
-    print('The next pivot is: ' + str(op))
+    print('The next pivot is: ' + str(op) + '\n')
+    if(op>0):
+        fi = multiSubRow(fi, opv, nr, pivotRow)
+    else:
+        fi = multiSumRow(fi, opv, nr, pivotRow)
+    print(fi)
 
     # TODO-CALCS 3
     # From 'zj_ci' array, multi with pivot's under number
