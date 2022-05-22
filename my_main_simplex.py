@@ -3,7 +3,7 @@ from simplex_algo_functions import *
 import numpy as np
 
 def main():
-    max_z = np.array([20, 25, 20])
+    max_z = np.array([20, 25, 30])
     restrictions = np.array([[0.2, 0.3, 0.2, 8], [0.4, 0.4, 0.5, 15]])
     check_positive_restrictions(restrictions)
 
@@ -19,11 +19,8 @@ def main():
     max_z_typical = max_z_typicalForm(max_z, extra_vars_add)
     zj_ci = zj_ci_creator(max_z_typical)
     flow_chart_with_identity_array = typicalForm(R, I)
-    
-    print(max_z_typical)
-    print(flow_chart_with_identity_array)
-    print(zj_ci)
-    print(P)
+
+    arrayPrinter(max_z_typical, flow_chart_with_identity_array, zj_ci, P)
     simplex_algo(flow_chart_with_identity_array, zj_ci, P)
 
 
