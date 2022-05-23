@@ -10,7 +10,7 @@ def found_negative(p):
 
 def smaller_negative_num_column(zc):
     n = np.where(zc == np.amin(zc))
-    return n[0]
+    return n
 
 
 def theta_creator(fi, P, snc):
@@ -29,6 +29,14 @@ def theta_creator(fi, P, snc):
 def pivot_finder(fi, col, row):
     return fi[int(row)][int(col)]
 
+def smallestPositiveNumLoc(t):
+    min = t[0]
+    loc = 0
+    for i in range(0, len(t)):
+        if(t[i]<=min):
+            min = t[i]
+            loc = i
+    return loc
 
 def pivot_fun(fi, zj_ci, P):
     print('\n==== Obtain pivot =====')
@@ -46,16 +54,16 @@ def pivot_fun(fi, zj_ci, P):
     # TODO-PIVOT 3
     # From theta array obtain smaller positive number and return ROW number
     # spnr: smaller positive num row
-    theta = theta[theta>=0]
-    spnr = np.where(min(theta))
-    print('\nPosition of smaller positive number in theta is at row : ' + str(spnr[0]))
+    spnr = smallestPositiveNumLoc(theta)
+    print('\nPosition of smaller positive number in theta is at row : ' + str(spnr))
+    print('Firts: ' + str(theta[0]))
 
     # TODO-PIVOT 4
     # With row number(spnr) and column number(snc), target the correct element in 'flow_chart_with_identity_array' array which will be our pivot
-    pivot = pivot_finder(fi, snc[0], spnr[0])
+    pivot = pivot_finder(fi, snc[0], spnr)
     print('So our pivot is: ' + str(pivot))
 
-    pivotInfo = [pivot, spnr[0], snc[0]]
+    pivotInfo = [pivot, spnr, snc[0]]
     return pivotInfo
 
 
@@ -89,17 +97,20 @@ def nextRow(row):
 def otherPivot(fi, row, col):
     return fi[row][col]
 
-def printArrays(fi, zj_ci, P):
+
+def printArrays(fi, zj_ci, P, lastP):
     print('\nTo fi einai:')
     print(fi)
     print('\nTo zj-cj einai:')
     print(zj_ci)
     print('\nTo P einai')
     print(P)
+    print(lastP)
 
 
 def simplex_algo(fi, zj_ci, P):
     roundCounter = 1
+    lastP = 0
     while(found_negative(zj_ci)):
         print('================= REPETITION: ' + str(roundCounter))
         pivotInfo = pivot_fun(fi, zj_ci, P)
@@ -114,8 +125,8 @@ def simplex_algo(fi, zj_ci, P):
         pv = pivot_vector_creator(pivotNum, len(fi[0]))
         fi = rowDivider(fi, pv, pivotRow)
         P[pivotRow] = P[pivotRow]/pivotNum
-        print('\n-- Calculation at row: ' + str(pivotRow))
-        printArrays(fi, zj_ci, P)
+        print('\n-- Calculation for row: ' + str(pivotRow))
+        printArrays(fi, zj_ci, P, lastP)
 
         # TODO-CALCS 2
         # From 'flow_chart_with_identity_array' array, to the other row, multi with pivot's under number the 'pivot's row'
@@ -131,16 +142,18 @@ def simplex_algo(fi, zj_ci, P):
         else:
             fi = multiSumRow(fi, opv, nr, pivotRow)
             P[nr]=P[nr]+(op*P[pivotRow])
-        print('\n-- Calculation at row: ' + str(nr))
-        printArrays(fi, zj_ci, P)
+        print('\n-- Calculation for row: ' + str(nr))
+        printArrays(fi, zj_ci, P, lastP)
 
         # TODO-CALCS 3
         # From 'zj_ci' array, multi with pivot's under number
+        lastP = lastP - (zj_ci[pivotCol]*P[pivotCol])
         zj_ci = zj_ci - (zj_ci[pivotCol]*fi[pivotRow])
-        print('\n-- Calculation at row: 3')
-        printArrays(fi, zj_ci, P)
+        
+        print('\n-- Calculation for row: 3')
+        printArrays(fi, zj_ci, P, lastP)
         roundCounter+=1
 
     # Returning array with most efficient variables
 
-    pass
+    return lastP
