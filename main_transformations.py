@@ -46,6 +46,7 @@ def zj_ci_creator(m):
         p = np.append(p, -abs(m[i]))
     return p
 
+
 def arrayPrinter(max_z_typical,flow_chart_with_identity_array,zj_ci,P):
     print('MaxZ Typical Form:')
     print(max_z_typical)
